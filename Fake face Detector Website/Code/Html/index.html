@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Face Detector</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Fake Face Detector</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="aboutit.html">About Us</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h2>Welcome to Fake Face Detector</h2>
+                <p>Detect Fake Faces Instantly and Enhance Your Security!</p>
+            </div>
+            <div class="welcome-image">
+                <img src="Animation - 1716084002641.gif" alt="Welcome Image">
+            </div>
+        </div>
+    </main>
+    <div class="upload-section">
+        <h2>Upload an Image</h2>
+        <form id="upload-form">
+            <input type="file" id="file-input" name="file" accept="image/*">
+            <button type="submit">Upload</button>
+        </form>
+        <p id="result"></p>
+    
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            document.getElementById('upload-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+    
+                const fileInput = document.getElementById('file-input');
+                if (!fileInput.files.length) {
+                    alert('Please select a file');
+                    return;
+                }
+    
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+    
+                try {
+                    const response = await axios.post('http://127.0.0.1:5000/predict', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+    
+                    document.getElementById('result').innerText = `Prediction: ${response.data.prediction}`;
+                } catch (error) {
+                    console.error('Error uploading the file:', error);
+                    alert('An error occurred while uploading the file');
+                    if (error.response && error.response.data) {
+                        console.log('Server response:', error.response.data);
+                    }
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
